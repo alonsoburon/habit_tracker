@@ -1,6 +1,7 @@
 class User:
     """
     This class is responsible for managing the Users table in the database.
+    It sends queries to the database. db is dependency injected from the HabitTrackerDB class.
     """
 
     def __init__(self, db):

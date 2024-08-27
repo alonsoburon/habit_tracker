@@ -1,11 +1,14 @@
 from Habit import Habit as HabitModule
+from Completions import Completions as CompletionsModule
 
 class Analytics:
     """
     This class is responsible for managing the Analytics of the Habits table in the database.
+    It calls functions from the Habit class and runs analytics on the data.
     """
     def __init__(self, db):
         self.habit = HabitModule(db)
+        self.completions = CompletionsModule(db)
 
     def getAllHabits(self, user_id):
         return self.habit.get_habits(user_id)
@@ -18,8 +21,8 @@ class Analytics:
         longest_streaks = {}
         for habit in habits:
             habit_id = habit[0]  # Assuming habit ID is the first element
-            longest_streaks[habit_id] = self.habit.get_longest_streak(habit_id)
+            longest_streaks[habit_id] = self.completions.get_longest_streak(habit_id)
         return longest_streaks
 
     def getLongestStreakForHabit(self, habit_id):
-        return self.habit.get_longest_streak(habit_id)
+        return self.completions.get_longest_streak(habit_id)

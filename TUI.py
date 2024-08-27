@@ -4,21 +4,11 @@ from User import User as UserModule
 from Habit import Habit as HabitModule
 from Completions import Completions as CompletionsModule
 from colorama import init, Fore, Style
-from prompt_toolkit import Application
-from prompt_toolkit.layout.containers import HSplit, Window
-from prompt_toolkit.layout.controls import FormattedTextControl
-from prompt_toolkit.layout.layout import Layout
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.styles import Style as PromptStyle
-from prompt_toolkit.layout import Layout, HSplit, Window
-from prompt_toolkit.layout.controls import FormattedTextControl
-from prompt_toolkit.widgets import Box, Frame
+from InteractiveMenu import InteractiveMenu
 from DataPersistence import HabitTrackerDB
 from Analytics import Analytics
 
 init(autoreset=True)
-
-
 
 db = HabitTrackerDB()
 analytics = Analytics(db)
@@ -37,71 +27,6 @@ def print_header():
 
 🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟
     """
-
-class InteractiveMenu:
-    """
-    This class is our interactive menu for our TUI, it will display a list of options and allow the user to select one.
-    """
-    def __init__(self, title, options):
-        self.title = title
-        self.options = options
-        self.selected = 0
-
-    def get_formatted_options(self):
-        result = []
-        for i, option in enumerate(self.options):
-            if i == self.selected:
-                result.append(('class:selected', f'> {option}\n'))
-            else:
-                result.append(('', f'  {option}\n'))
-        return result
-
-    def create_layout(self):
-        return Layout(
-            HSplit([
-                Box(
-                    body=Window(height=1, content=FormattedTextControl(self.title), align="center"),
-                    padding=1,
-                    style="class:title"
-                ),
-                Frame(
-                    body=Window(content=FormattedTextControl(self.get_formatted_options)),
-                    title="Options",
-                    style="class:options-frame"
-                )
-            ])
-        )
-
-    def create_style(self):
-        return PromptStyle([
-            ('selected', '#CCCC11 bold'),
-        ])
-
-    def create_keybindings(self):
-        kb = KeyBindings()
-
-        @kb.add('up')
-        def _(event):
-            self.selected = (self.selected - 1) % len(self.options)
-
-        @kb.add('down')
-        def _(event):
-            self.selected = (self.selected + 1) % len(self.options)
-
-        @kb.add('enter')
-        def _(event):
-            event.app.exit(result=self.selected)
-
-        return kb
-
-    def run(self):
-        application = Application(
-            layout=self.create_layout(),
-            key_bindings=self.create_keybindings(),
-            style=self.create_style(),
-            full_screen=True
-        )
-        return application.run()
 
 def main_menu():
     menu = InteractiveMenu(
@@ -270,23 +195,3 @@ def debug_menu():
         return
 
     input(Fore.YELLOW + "\nPress Enter to continue...")
-def main():
-    while True:
-        clear_screen()
-        print(Fore.CYAN + Style.BRIGHT + print_header())
-        choice = main_menu()
-
-        if choice == 0:
-            manage_users()
-        elif choice == 1:
-            manage_habits()
-        elif choice == 2:
-            view_analytics()
-        elif choice == 3:
-            debug_menu()
-        elif choice == 4:
-            print(Fore.YELLOW + "\n👋 Thank you for using Alonso's Habit Tracker! Goodbye! 🌟")
-            break
-
-if __name__ == "__main__":
-    main()

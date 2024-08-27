@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Command Line Habit Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css" id="theme">
+
+    <style>
+        .slides section img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: auto;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h1>Command Line Habit Tracker</h1>
+                <p>Programmed by Alonso Burón</p>
+                <p><em>Simplify your habit tracking</em></p>
+            </section>
+
+            <section>
+                <p>Program's structure</p>
+                <img src="https://mermaid.ink/svg/pako:eNptkj1uwkAQha8y2hoKoHMRydigFCBFQUmzphh7B3uFf9B6LWIhLpAUKEoVmjSpcoKcJxdIjpDFC1KseCuv3zfz3oy9Y1EhiDlslRbbKEGlYXYb5GCOy-coc5hTXi2h37-CMf95e36HOeYYE9yVpMqlRcdWH3BXiEZovx_ye0nbrooR9yklTX-Lzu4N4BnLw9P35-Hieo2h1JcmnmWsbaO0hbNvV83IDKfWVgIswSuyzSmIof6n8E2Kl0domrk5prWW0aWfb4mBtXLTtG13lltJIKzhhpQshIykrtvkyJKzIo-p1LDQinDdsZkJ_zq-nhbjU1jF9itZfWL1AfdSQgU-agyxpLY65FNpsooQtlInIKosq0EYtMNqasY_fsDkodkv67GMVIZSmL9md-ICphPKKGCOeRRmrQEL8r3hsNLFos4j5mhVUY-poooT5qwwLc2t2hg_8iXGCjOL7H8B5IrMtA" alt="" width="300" height="auto">
+            </section>
+
+            <section>
+                <h2>Required external libraries:</h2>
+                <li>
+                    <ul>SQLite3 (included in python)</ul>
+                    <ul>Colorama (for easier terminal coloring)</ul>
+                    <ul>prompt_toolkit (For interactive arrow-keys oriented TUI)</ul>
+                </li>
+            </section>
+        </div>
+    </div>
+
+    <!-- Reveal.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize();
+    </script>
+</body>
+</html>

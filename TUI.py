@@ -23,7 +23,7 @@ def print_header():
     return f"""
 🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟
 
-                   🎯 Alonso's Habit Tracker 🎯
+                  🎯 Alonso's Habit Tracker 🎯
 
 🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟✨🌟
     """
@@ -83,18 +83,49 @@ def manage_habits():
         )
         user_id = User.get_users()[user_id_menu.run()][0]
         
-        name = input(Fore.CYAN + "Enter habit name: ")
-        description = input(Fore.CYAN + "Enter habit description: ")
+        predefined_habits = { # Predefined habits for Daily and Weekly periodicity
+            "Daily": [
+                ("Exercise", "Daily exercise routine"),
+                ("Read", "Read a book for 30 minutes"),
+                ("Meditate", "Meditate for 10 minutes"),
+                ("Study", "Study a new topic for 1 hour"),
+                ("Journal", "Write in your journal")
+            ],
+            "Weekly": [
+                ("Grocery Shopping", "Do the weekly grocery shopping"),
+                ("Clean House", "Clean the house"),
+                ("Laundry", "Do the laundry"),
+                ("Call Family", "Call a family member"),
+                ("Plan Week", "Plan the upcoming week")
+            ]
+        }
         
         periodicity_options = ["Daily", "Weekly"]
         periodicity_menu = InteractiveMenu(
             "Select periodicity:",
             periodicity_options
+        ) # Get periodicity from user
+        periodicity = periodicity_options[periodicity_menu.run()]
+        
+        habit_names = [habit[0] for habit in predefined_habits[periodicity]] + ["Custom Habit"]
+        # Get habit names from predefined habits and add "Custom Habit" option
+        
+        habit_menu = InteractiveMenu(
+            "Select a habit or add a custom one:",
+            habit_names
         )
-        periodicity = periodicity_options[periodicity_menu.run()].lower()
+        
+        habit_choice = habit_menu.run()
+        
+        if habit_choice < len(predefined_habits[periodicity]):
+            name, description = predefined_habits[periodicity][habit_choice]
+        else:
+            name = input(Fore.CYAN + "Enter habit name: ")
+            description = input(Fore.CYAN + "Enter habit description: ")
+        # If user selects a predefined habit, get name and description from predefined habits
         
         creation_date = time.strftime('%Y-%m-%d')
-        Habit.add_habit(name, description, periodicity, creation_date, user_id)
+        Habit.add_habit(name, description, periodicity.lower(), creation_date, user_id)
         print(Fore.GREEN + f"✅ Habit '{name}' added successfully!")
     elif choice == 1:
         user_id_menu = InteractiveMenu(
@@ -132,7 +163,13 @@ def view_analytics():
 
     menu = InteractiveMenu(
         "📊 Analytics:",
-        ["📈 View All Habits", "🔍 View Habits by Periodicity", "🏆 View Longest Streak", "↩️ Back to Main Menu"]
+        [
+        "📈 View All Habits",
+        "🔍 View Habits by Periodicity",
+        "🏆 View Longest Streak",
+        "🔥 Longest Streaks per periodicity",
+        "↩️ Back to Main Menu"
+        ]
     )
     choice = menu.run()
     
@@ -174,6 +211,20 @@ def view_analytics():
             habit = Habit.get_habit(habit_id)
             print(Fore.WHITE + f"Habit: {habit[1]}, Longest Streak: {streak} days")
     elif choice == 3:
+        user_id_menu = InteractiveMenu(
+            "Select a user:",
+            user_options
+        )
+        user_id = User.get_users()[user_id_menu.run()][0]
+        
+        all_longest_streaks = analytics.getLongestStreaksForAllPeriodicities(user_id)
+        
+        for periodicity, streaks in all_longest_streaks.items():
+            print(Fore.CYAN + f"\nLongest Streaks for {periodicity.capitalize()} Habits:")
+            for habit_id, streak in streaks.items():
+                habit = Habit.get_habit(habit_id)
+                print(Fore.WHITE + f"Habit: {habit[1]}, Longest Streak: {streak} days")
+    elif choice == 4:
         return
     
     input(Fore.YELLOW + "\nPress Enter to continue...")

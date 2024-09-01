@@ -1,6 +1,6 @@
 # Command Line Habit Tracker
 
-![Habit Tracker Logo](Menu.png)
+![Habit Tracker Logo](documents/Menu.png)
 
 ## Project Overview
 
@@ -90,9 +90,5 @@ The application follows a modular structure with clear separation of concerns:
 3. Use the Enter key to select an option
 4. When done, Exit the program
 
-### Menu:
-
-1. **Manage Users**: Add, view, or delete users.
-2. **Manage Habits**: Add new habits, view existing ones, or mark habits as complete.
-3. **View Analytics**: View all habits, habits by periodicity, and longest streaks.
-4. **Debug Menu**: Clear the database or fill it with dummy data for testing purposes.
+### Testing
+Included in the repo is a `Test.py` file, when run using `python Test.py` you should get a unit test suite that tries every functional method in the code directly. It's a suite of 24 tests which will try methods from `Analytics.py`, `Completions.py`, `DataPersistence.py`, `Habit.py` and `User.py`.

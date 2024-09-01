@@ -1,4 +1,6 @@
 import sqlite3
+import datetime
+import random
 
 class HabitTrackerDB:
     """
@@ -63,32 +65,61 @@ class HabitTrackerDB:
             cursor.execute('SELECT id FROM Users WHERE username = ?', ('Test_User_3',))
             user_id_3 = cursor.fetchone()[0]
 
+            # Define pre-defined habits
+            daily_habits = [
+                ("Exercise", "Daily exercise routine"),
+                ("Read", "Read a book for 30 minutes"),
+                ("Meditate", "Meditate for 10 minutes"),
+                ("Study", "Study a new topic for 1 hour"),
+                ("Journal", "Write in your journal")
+            ]
+
+            weekly_habits = [
+                ("Grocery Shopping", "Do the weekly grocery shopping"),
+                ("Clean House", "Clean the house"),
+                ("Laundry", "Do the laundry"),
+                ("Call Family", "Call a family member"),
+                ("Plan Week", "Plan the upcoming week")
+            ]
+
             # Insert habits
-            self.conn.execute('''
-                INSERT INTO Habits (name, description, periodicity, creationDate, user_id) VALUES
-                ('Run', 'Run 5km', 'daily', '2021-01-01', ?),
-                ('Read', 'Read a book', 'daily', '2021-01-01', ?),
-                ('Study', 'Study for 1 hour', 'daily', '2021-01-01', ?)
-            ''', (user_id_1, user_id_2, user_id_3))
+            start_date = datetime.date(2024, 8, 1)
+            
+            for user_id in [user_id_1, user_id_2, user_id_3]:
+                for habit, description in daily_habits:
+                    self.conn.execute('''
+                        INSERT INTO Habits (name, description, periodicity, creationDate, user_id)
+                        VALUES (?, ?, 'daily', ?, ?)
+                    ''', (habit, description, start_date, user_id))
 
-            # Retrieve habit IDs
-            cursor.execute('SELECT id FROM Habits WHERE name = ?', ('Run',))
-            habit_id_1 = cursor.fetchone()[0]
-            cursor.execute('SELECT id FROM Habits WHERE name = ?', ('Read',))
-            habit_id_2 = cursor.fetchone()[0]
-            cursor.execute('SELECT id FROM Habits WHERE name = ?', ('Study',))
-            habit_id_3 = cursor.fetchone()[0]
+                for habit, description in weekly_habits:
+                    self.conn.execute('''
+                        INSERT INTO Habits (name, description, periodicity, creationDate, user_id)
+                        VALUES (?, ?, 'weekly', ?, ?)
+                    ''', (habit, description, start_date, user_id))
 
-            # Insert completions
-            self.conn.execute('''
-                INSERT INTO Completions (habit_id, completionDate) VALUES
-                (?, '2021-01-01'),
-                (?, '2021-01-02'),
-                (?, '2021-01-03'),
-                (?, '2021-01-01'),
-                (?, '2021-01-02'),
-                (?, '2021-01-01')
-            ''', (habit_id_1, habit_id_1, habit_id_1, habit_id_2, habit_id_2, habit_id_3))
+            # Retrieve all habit IDs
+            cursor.execute('SELECT id, periodicity FROM Habits')
+            habits = cursor.fetchall()
 
+            # Insert completions for 4 weeks, 80% of the time
+            for i in range(28):  # 28 days
+                current_date = start_date + datetime.timedelta(days=i) # Add i days to start_date
+                for habit_id, periodicity in habits:
+                    if periodicity == 'daily':
+                        # Complete daily habits approximately 80% of the time
+                        if random.random() < 0.8:
+                            self.conn.execute('''
+                                INSERT INTO Completions (habit_id, completionDate)
+                                VALUES (?, ?)
+                            ''', (habit_id, current_date))
+                    elif periodicity == 'weekly' and i % 7 == 0:
+                        # Complete weekly habits approximately 80% of the time
+                        if random.random() < 0.8:
+                            self.conn.execute('''
+                                INSERT INTO Completions (habit_id, completionDate)
+                                VALUES (?, ?)
+                            ''', (habit_id, current_date))
+        self.conn.commit()
     def close(self):
         self.conn.close()

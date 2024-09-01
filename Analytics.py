@@ -21,7 +21,14 @@ class Analytics:
         longest_streaks = {}
         for habit in habits:
             habit_id = habit[0]  # Habit ID as first element in tuple
-            longest_streaks[habit_id] = self.completions.get_longest_streak(habit_id)
+            streak_data = self.completions.get_longest_streak(habit_id)
+            if streak_data:
+                start_date, end_date, length = streak_data
+                longest_streaks[habit_id] = {
+                    "start_date": start_date,
+                    "end_date": end_date,
+                    "length": length
+                }
         return longest_streaks
 
     def getLongestStreakForHabit(self, habit_id):
@@ -36,7 +43,14 @@ class Analytics:
             longest_streaks = {}  # Dictionary to store longest streaks for each habit
             for habit in habits:
                 habit_id = habit[0]  # Habit ID as first element in tuple
-                longest_streaks[habit_id] = self.completions.get_longest_streak(habit_id)  # Get longest streak for habit
+                streak_data = self.completions.get_longest_streak(habit_id)  # Get longest streak data for habit
+                if streak_data:
+                    start_date, end_date, length = streak_data
+                    longest_streaks[habit_id] = {
+                        "start_date": start_date,
+                        "end_date": end_date,
+                        "length": length
+                    }
             all_longest_streaks[periodicity] = longest_streaks  # Store the longest streaks for the current periodicity
 
         return all_longest_streaks  # Return dictionary of longest streaks for each periodicity

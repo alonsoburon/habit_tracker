@@ -18,11 +18,35 @@ class Completions:
     def get_longest_streak(self, habit_id):
         cursor = self.db.conn.cursor()
         cursor.execute('''
-            SELECT COUNT(*) FROM Completions
-            WHERE habit_id = ?
-            GROUP BY strftime('%Y-%m-%d', completionDate)
-            ORDER BY COUNT(*) DESC
-            LIMIT 1
+            WITH HabitCompletions AS (
+                SELECT 
+                    C.habit_id,
+                    H.periodicity,
+                    C.completionDate,
+                    DATE(C.completionDate, 
+                        CASE 
+                            WHEN H.periodicity = 'daily' THEN '-' || (ROW_NUMBER() OVER (PARTITION BY C.habit_id ORDER BY C.completionDate) - 1) || ' days'
+                            WHEN H.periodicity = 'weekly' THEN '-' || (ROW_NUMBER() OVER (PARTITION BY C.habit_id ORDER BY C.completionDate) - 1) * 7 || ' days'
+                        END
+                    ) AS streak_start
+                FROM 
+                    Completions C
+                JOIN 
+                    Habits H ON C.habit_id = H.id
+                WHERE 
+                    C.habit_id = ?
+            )
+            SELECT 
+                MIN(completionDate) AS start_date,
+                MAX(completionDate) AS end_date,
+                COUNT(*) AS length
+            FROM 
+                HabitCompletions
+            GROUP BY 
+                habit_id, streak_start
+            ORDER BY 
+                length DESC
+            LIMIT 1;
         ''', (habit_id,))
         return cursor.fetchone()
 

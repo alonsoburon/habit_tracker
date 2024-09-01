@@ -173,7 +173,7 @@ def view_analytics():
     )
     choice = menu.run()
     
-    if choice == 0:
+    if choice == 0: # View All Habits
         user_id_menu = InteractiveMenu(
             "Select a user:",
             user_options
@@ -183,7 +183,7 @@ def view_analytics():
         print(Fore.CYAN + "\nAll Habits:")
         for habit in habits:
             print(Fore.WHITE + f"ID: {habit[0]}, Name: {habit[1]}, Periodicity: {habit[3]}")
-    elif choice == 1:
+    elif choice == 1: # View Habits by Periodicity
         user_id_menu = InteractiveMenu(
             "Select a user:",
             user_options
@@ -199,7 +199,7 @@ def view_analytics():
         print(Fore.CYAN + f"\n{periodicity.capitalize()} Habits:")
         for habit in habits:
             print(Fore.WHITE + f"ID: {habit[0]}, Name: {habit[1]}")
-    elif choice == 2:
+    elif choice == 2: # View Longest Streak
         user_id_menu = InteractiveMenu(
             "Select a user:",
             user_options
@@ -207,10 +207,13 @@ def view_analytics():
         user_id = User.get_users()[user_id_menu.run()][0]
         longest_streaks = analytics.getLongestStreakAllHabits(user_id)
         print(Fore.CYAN + "\nLongest Streaks:")
-        for habit_id, streak in longest_streaks.items():
+        for habit_id, streak_info in longest_streaks.items():
             habit = Habit.get_habit(habit_id)
-            print(Fore.WHITE + f"Habit: {habit[1]}, Longest Streak: {streak} days")
-    elif choice == 3:
+            start_date = streak_info["start_date"]
+            end_date = streak_info["end_date"]
+            length = streak_info["length"]
+            print(Fore.WHITE + f"Habit: {habit[1]}, Longest Streak: {length} days (from {start_date} to {end_date})")
+    elif choice == 3:  # Longest Streaks per periodicity
         user_id_menu = InteractiveMenu(
             "Select a user:",
             user_options
@@ -221,9 +224,12 @@ def view_analytics():
         
         for periodicity, streaks in all_longest_streaks.items():
             print(Fore.CYAN + f"\nLongest Streaks for {periodicity.capitalize()} Habits:")
-            for habit_id, streak in streaks.items():
+            for habit_id, streak_info in streaks.items():
                 habit = Habit.get_habit(habit_id)
-                print(Fore.WHITE + f"Habit: {habit[1]}, Longest Streak: {streak} days")
+                start_date = streak_info["start_date"]
+                end_date = streak_info["end_date"]
+                length = streak_info["length"]
+                print(Fore.WHITE + f"Habit: {habit[1]}, Longest Streak: {length} days (from {start_date} to {end_date})")
     elif choice == 4:
         return
     

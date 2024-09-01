@@ -45,6 +45,9 @@ class HabitTrackerDB:
             self.conn.execute('DELETE FROM Users')
             self.conn.execute('DELETE FROM Habits')
             self.conn.execute('DELETE FROM Completions')
+            self.conn.execute('DELETE FROM sqlite_sequence WHERE name="Users"')
+            self.conn.execute('DELETE FROM sqlite_sequence WHERE name="Habits"')
+            self.conn.execute('DELETE FROM sqlite_sequence WHERE name="Completions"')
 
     def fill_tables(self):
         with self.conn:
@@ -84,7 +87,7 @@ class HabitTrackerDB:
 
             # Insert habits
             start_date = datetime.date(2024, 8, 1)
-            
+
             for user_id in [user_id_1, user_id_2, user_id_3]:
                 for habit, description in daily_habits:
                     self.conn.execute('''

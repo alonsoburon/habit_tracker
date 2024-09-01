@@ -5,3 +5,12 @@ __pycache__/Habit.cpython-312.pyc
 __pycache__/InteractiveMenu.cpython-312.pyc
 __pycache__/TUI.cpython-312.pyc
 __pycache__/User.cpython-312.pyc
+__pycache__/main.cpython-312.pyc
+__pycache__/Test.cpython-312-pytest-8.3.2.pyc
+tests/__pycache__/test_analytics.cpython-312-pytest-8.3.2.pyc
+tests/__pycache__/__init__.cpython-312.pyc
+tests/__pycache__/test_analytics.cpython-312.pyc
+tests/__pycache__/test_completions.cpython-312.pyc
+tests/__pycache__/test_dataPersistence.cpython-312.pyc
+tests/__pycache__/test_habit.cpython-312.pyc
+tests/__pycache__/test_user.cpython-312.pyc
